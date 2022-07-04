@@ -1,0 +1,49 @@
+server:
+  port: 8082
+
+spring:
+  application:
+    name: object
+  datasource:
+    url: jdbc:postgresql://localhost:5432/object
+    username: postgres
+    password: postgres
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        format_sql: true
+    show-sql: true
+    hibernate:
+      ddl-auto: none
+    open-in-view: false
+  cloud:
+    function:
+      definition: saveResource; openResource; registerResource; open|save|consume; open; save
+    stream:
+      bindings:
+        open-in-0:
+        save-in-0:
+        openSaveConsume-in-0:
+
+        saveResource-in-0:
+          destination: control.resource.save
+          group: object
+        saveResource-out-0:
+          destination: object.resource.save.response
+        openResource-in-0:
+          destination: control.resource.open
+          group: object
+        openResource-out-0:
+          destination: object.resource.open.response
+        registerResource-in-0:
+          destination: control.resource.register
+          group: object
+        registerResource-out-0:
+          destination: object.resource.register.response
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health, info, prometheus
